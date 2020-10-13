@@ -17,3 +17,17 @@ export function getStudentList(params = {}) {
   });
   return Promise.resolve(mockData);
 }
+
+export function addStudent(params) {
+  console.log('新增学生', params);
+  return Promise.resolve({
+    status: 200,
+  });
+}
+
+export function updateStudent(params) {
+  console.log('编辑学生', params);
+  return Promise.resolve({
+    status: 200,
+  });
+}

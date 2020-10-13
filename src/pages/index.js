@@ -1,7 +1,8 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import ListFilter from '../components/ListFilter';
-import { getStudentList } from '../services';
+import UserModal from '../components/UserModal';
+import { getStudentList, addStudent, updateStudent } from '../services';
 import styles from './index.less';
 
 export default class App extends React.Component {
@@ -13,6 +14,9 @@ export default class App extends React.Component {
       current: 1,
       total: 0,
       pageSize: 10,
+      visible: false,
+      key: 1,
+      userInfo: {},
     };
   }
 
@@ -21,8 +25,9 @@ export default class App extends React.Component {
    */
   onSearch = values => {
     this.setState({
-        formData: values,
-      }, () => this.getList());
+      formData: values,
+      current: 1,
+    }, () => this.getList());
   };
 
   /**
@@ -30,11 +35,12 @@ export default class App extends React.Component {
    */
   onReset = () => {
     this.setState({
-        formData: {},
-      }, () => this.getList());
+      formData: {},
+      current: 1,
+    }, () => this.getList());
   };
 
-  getList(params) {
+  getList() {
     const { formData, current, pageSize } = this.state;
     getStudentList({
       ...formData,
@@ -56,12 +62,54 @@ export default class App extends React.Component {
   };
 
   // 页码变化
-  onShowSizeChange = (current, size) => {
+  onShowSizeChange = (current, pageSize) => {
     this.setState({
       current,
-      pageSize: size,
+      pageSize,
     }, () => this.getList());
   };
+
+  /**
+   * 打开编辑学生弹窗
+   */
+  openUserModal = record => {
+    this.setState({
+      userInfo: record,
+      visible: true,
+      key: Math.random(),
+    })
+  }
+
+  /**
+   * 关闭编辑学生弹窗
+   */
+  closeUserModal = () => {
+    this.setState({
+      visible: false,
+    })
+  }
+
+  /**
+   * 编辑/新增
+   */
+  edit = values => {
+    const { userInfo } = this.state;
+    if (userInfo.id) { // 编辑
+      updateStudent({
+        id: userInfo.id,
+        ...values,
+      }).then(() => {
+        this.getList();
+        this.closeUserModal();
+      })
+    } else { // 新增
+      addStudent(values)
+        .then(() => {
+          this.getList();
+          this.closeUserModal();
+        });
+    }
+  }
 
   componentDidMount() {
     this.getList();
@@ -72,9 +120,9 @@ export default class App extends React.Component {
       { title: '姓名', dataIndex: 'name' },
       { title: '年龄', dataIndex: 'age' },
       { title: '性别', dataIndex: 'gender' },
-      { title: '操作', key: 'action', render: () => <a>编辑</a> },
+      { title: '操作', key: 'action', render: (record) => <a onClick={() => this.openUserModal(record)}>编辑</a> },
     ];
-    const { list, total, current, pageSize } = this.state;
+    const { list, total, current, pageSize, visible, key, userInfo } = this.state;
     const pagination = {
       pageSizeOptions: [ '10', '30', '50' ],
       showSizeChanger: true,
@@ -91,7 +139,14 @@ export default class App extends React.Component {
     return (
       <div className={styles.wrap}>
         <ListFilter onSearch={this.onSearch} onReset={this.onReset} />
+        <Button type="primary" onClick={() => this.openUserModal({})}>新增</Button>
         <Table columns={columns} dataSource={list} rowKey="id" pagination={pagination} />
+        <UserModal
+          visible={visible}
+          key={key}
+          userInfo={userInfo}
+          onCancel={this.closeUserModal}
+          onOk={this.edit} />
       </div>
     );
   }
