@@ -24,26 +24,30 @@ export default class App extends React.Component {
    * 搜索
    */
   onSearch = values => {
-    this.setState({
+    this.getList({
       formData: values,
       current: 1,
-    }, () => this.getList());
+    });
   };
 
   /**
    * 重置
    */
   onReset = () => {
-    this.setState({
+    this.getList({
       formData: {},
       current: 1,
-    }, () => this.getList());
+    });
   };
+
+  getList(params = {}) {
+    this.setState(params, () => this.fetch());
+  }
 
   /**
    * 请求列表
    */
-  getList() {
+  fetch() {
     const { formData, current, pageSize } = this.state;
     getStudentList({
       ...formData,
@@ -61,19 +65,19 @@ export default class App extends React.Component {
    * 分页
    */
   onPageChange = (current) => {
-    this.setState({
+    this.getList({
       current,
-    }, () => this.getList());
+    });
   };
 
   /**
    * 页码变化
    */
   onShowSizeChange = (current, pageSize) => {
-    this.setState({
+    this.getList({
       current,
       pageSize,
-    }, () => this.getList());
+    });
   };
 
   /**

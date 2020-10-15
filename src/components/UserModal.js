@@ -30,6 +30,9 @@ class UserModal extends Component {
             {
               getFieldDecorator('name', {
                 initialValue: name,
+                rules: [
+                  { required: true, message: '请输入' },
+                ],
               })(<Input />)
             }
           </Form.Item>
@@ -37,6 +40,9 @@ class UserModal extends Component {
             {
               getFieldDecorator('age', {
                 initialValue: age,
+                rules: [
+                  { required: true, message: '请输入' },
+                ],
               })(<Input />)
             }
           </Form.Item>
@@ -44,6 +50,9 @@ class UserModal extends Component {
             {
               getFieldDecorator('gender', {
                 initialValue: gender,
+                rules: [
+                  { required: true, message: '请输入' },
+                ],
               })(
                 <Select>
                   <Select.Option value={'男'}>男</Select.Option>
