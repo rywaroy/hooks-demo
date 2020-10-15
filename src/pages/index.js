@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Button, message } from 'antd';
 import ListFilter from '../components/ListFilter';
 import UserModal from '../components/UserModal';
+import ATable from '../components/ATable';
 import { getStudentList, addStudent, updateStudent } from '../services';
 import styles from './index.less';
 
@@ -40,7 +41,7 @@ export default class App extends React.Component {
     });
   };
 
-  getList(params = {}) {
+  getList = (params = {}) => {
     this.setState(params, () => this.fetch());
   }
 
@@ -60,25 +61,6 @@ export default class App extends React.Component {
       });
     });
   }
-
-  /**
-   * 分页
-   */
-  onPageChange = (current) => {
-    this.getList({
-      current,
-    });
-  };
-
-  /**
-   * 页码变化
-   */
-  onShowSizeChange = (current, pageSize) => {
-    this.getList({
-      current,
-      pageSize,
-    });
-  };
 
   /**
    * 打开编辑学生弹窗
@@ -136,24 +118,20 @@ export default class App extends React.Component {
       { title: '操作', key: 'action', render: (record) => <a onClick={() => this.openUserModal(record)}>编辑</a> },
     ];
     const { list, total, current, pageSize, visible, key, userInfo } = this.state;
-    const pagination = {
-      pageSizeOptions: [ '10', '30', '50' ],
-      showSizeChanger: true,
-      showQuickJumper: true,
-      showTotal: (total, range) => `共 ${total} 条`,
-      total,
-      current,
-      pageSize,
-      onChange: this.onPageChange,
-      onShowSizeChange: this.onShowSizeChange
-    };
-    
 
     return (
       <div className={styles.wrap}>
         <ListFilter onSearch={this.onSearch} onReset={this.onReset} />
         <Button type="primary" onClick={() => this.openUserModal({})}>新增</Button>
-        <Table columns={columns} dataSource={list} rowKey="id" pagination={pagination} />
+        {/* <Table columns={columns} dataSource={list} rowKey="id" pagination={pagination} /> */}
+        <ATable
+          total={total}
+          current={current}
+          pageSize={pageSize}
+          getList={this.getList}
+          columns={columns}
+          dataSource={list}
+          rowKey="id" />
         <UserModal
           visible={visible}
           key={key}
