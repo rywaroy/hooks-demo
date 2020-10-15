@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, message } from 'antd';
 import ListFilter from '../components/ListFilter';
 import UserModal from '../components/UserModal';
 import { getStudentList, addStudent, updateStudent } from '../services';
@@ -40,6 +40,9 @@ export default class App extends React.Component {
     }, () => this.getList());
   };
 
+  /**
+   * 请求列表
+   */
   getList() {
     const { formData, current, pageSize } = this.state;
     getStudentList({
@@ -54,14 +57,18 @@ export default class App extends React.Component {
     });
   }
 
-  // 分页
+  /**
+   * 分页
+   */
   onPageChange = (current) => {
     this.setState({
       current,
     }, () => this.getList());
   };
 
-  // 页码变化
+  /**
+   * 页码变化
+   */
   onShowSizeChange = (current, pageSize) => {
     this.setState({
       current,
@@ -101,12 +108,14 @@ export default class App extends React.Component {
       }).then(() => {
         this.getList();
         this.closeUserModal();
-      })
+        message.success('编辑成功');
+      });
     } else { // 新增
       addStudent(values)
         .then(() => {
           this.getList();
           this.closeUserModal();
+          message.success('新增成功');
         });
     }
   }
