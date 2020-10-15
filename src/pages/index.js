@@ -2,9 +2,14 @@ import React from 'react';
 import { Table, Button, message } from 'antd';
 import ListFilter from '../components/ListFilter';
 import UserModal from '../components/UserModal';
-import ATable from '../components/ATable';
+// import ATable from '../components/ATable';
+import BTable from '../components/BTable';
+import aHOC from '../hoc/aHOC';
+import bHOC from '../hoc/bHOC';
 import { getStudentList, addStudent, updateStudent } from '../services';
 import styles from './index.less';
+
+const ATable = aHOC(BTable);
 
 export default class App extends React.Component {
   constructor(props) {
