@@ -7,16 +7,13 @@ import BTable from '../components/BTable';
 import aHOC from '../hoc/aHOC';
 import bHOC from '../hoc/bHOC';
 import { getStudentList, addStudent, updateStudent } from '../services';
-import { useAntdTable } from 'behooks';
+import { useAntdTable, useModal } from 'behooks';
 import styles from './index.less';
 
 // const ATable = aHOC(BTable);
 
 const App = () => {
-  // const [visible, setVisible] = useState(false);
-  // const [key, setKey] = useState(1);
   const [userInfo, setUserInfo] = useState({});
-  const [num, setNum] = useState(1);
 
   const formRef = useRef(null);
 
@@ -38,14 +35,15 @@ const App = () => {
 
   const { submit, reset } = search;
 
+  const { toggle, modalProps } = useModal();
+
   /**
    * 打开编辑学生弹窗
    */
-  // const openUserModal = record => {
-  //   setVisible(true);
-  //   setKey(Math.random());
-  //   setUserInfo(record);
-  // }
+  const openUserModal = record => {
+    setUserInfo(record);
+    toggle();
+  }
 
   /**
    * 关闭编辑学生弹窗
@@ -53,10 +51,6 @@ const App = () => {
   // const closeUserModal = () => {
   //   setVisible(false);
   // }
-
-  const { openUserModal, closeUserModal, modalProps } = getModal(setNum);
-
-  console.log(modalProps);
 
   /**
    * 编辑/新增
@@ -68,14 +62,14 @@ const App = () => {
         ...values,
       }).then(() => {
         refresh();
-        closeUserModal();
+        toggle();
         message.success('编辑成功');
       });
     } else { // 新增
       addStudent(values)
         .then(() => {
           refresh();
-          closeUserModal();
+          toggle();
           message.success('新增成功');
         });
     }
@@ -96,41 +90,9 @@ const App = () => {
       <UserModal
         {...modalProps}
         userInfo={userInfo}
-        onCancel={closeUserModal}
         onOk={edit} />
     </div>
   );
-}
-
-let key = 1;
-let visible = false;
-
-function getModal(setNum) {
-  /**
-   * 打开编辑学生弹窗
-   */
-  const openUserModal = record => {
-    visible = true;
-    key = Math.random();
-    setNum(Math.random());
-  }
-
-  /**
-   * 关闭编辑学生弹窗
-   */
-  const closeUserModal = () => {
-    visible = false;
-    setNum(Math.random());
-  }
-
-  return {
-    openUserModal,
-    closeUserModal,
-    modalProps: {
-      visible,
-      key,
-    }
-  }
 }
 
 export default App;
