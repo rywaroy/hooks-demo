@@ -13,9 +13,10 @@ import styles from './index.less';
 // const ATable = aHOC(BTable);
 
 const App = () => {
-  const [visible, setVisible] = useState(false);
-  const [key, setKey] = useState(1);
+  // const [visible, setVisible] = useState(false);
+  // const [key, setKey] = useState(1);
   const [userInfo, setUserInfo] = useState({});
+  const [num, setNum] = useState(1);
 
   const formRef = useRef(null);
 
@@ -40,18 +41,22 @@ const App = () => {
   /**
    * 打开编辑学生弹窗
    */
-  const openUserModal = record => {
-    setVisible(true);
-    setKey(Math.random());
-    setUserInfo(record);
-  }
+  // const openUserModal = record => {
+  //   setVisible(true);
+  //   setKey(Math.random());
+  //   setUserInfo(record);
+  // }
 
   /**
    * 关闭编辑学生弹窗
    */
-  const closeUserModal = () => {
-    setVisible(false);
-  }
+  // const closeUserModal = () => {
+  //   setVisible(false);
+  // }
+
+  const { openUserModal, closeUserModal, modalProps } = getModal(setNum);
+
+  console.log(modalProps);
 
   /**
    * 编辑/新增
@@ -89,13 +94,43 @@ const App = () => {
       <Button type="primary" onClick={() => openUserModal({})}>新增</Button>
       <Table columns={columns} rowKey="id" {...tableProps} />
       <UserModal
-        visible={visible}
-        key={key}
+        {...modalProps}
         userInfo={userInfo}
         onCancel={closeUserModal}
         onOk={edit} />
     </div>
   );
+}
+
+let key = 1;
+let visible = false;
+
+function getModal(setNum) {
+  /**
+   * 打开编辑学生弹窗
+   */
+  const openUserModal = record => {
+    visible = true;
+    key = Math.random();
+    setNum(Math.random());
+  }
+
+  /**
+   * 关闭编辑学生弹窗
+   */
+  const closeUserModal = () => {
+    visible = false;
+    setNum(Math.random());
+  }
+
+  return {
+    openUserModal,
+    closeUserModal,
+    modalProps: {
+      visible,
+      key,
+    }
+  }
 }
 
 export default App;
