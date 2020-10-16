@@ -124,19 +124,21 @@ export default class App extends React.Component {
     ];
     const { list, total, current, pageSize, visible, key, userInfo } = this.state;
 
+    const pagination = getPagination(this.getList, total, current, pageSize);
+
     return (
       <div className={styles.wrap}>
         <ListFilter onSearch={this.onSearch} onReset={this.onReset} />
         <Button type="primary" onClick={() => this.openUserModal({})}>新增</Button>
-        {/* <Table columns={columns} dataSource={list} rowKey="id" pagination={pagination} /> */}
-        <ATable
+        <Table columns={columns} dataSource={list} rowKey="id" pagination={pagination} />
+        {/* <ATable
           total={total}
           current={current}
           pageSize={pageSize}
           getList={this.getList}
           columns={columns}
           dataSource={list}
-          rowKey="id" />
+          rowKey="id" /> */}
         <UserModal
           visible={visible}
           key={key}
@@ -146,4 +148,37 @@ export default class App extends React.Component {
       </div>
     );
   }
+}
+
+function getPagination(getList, total, current, pageSize) {
+  /**
+   * 分页
+   */
+  const onPageChange = (current) => {
+    getList({
+      current,
+    });
+  };
+
+  /**
+   * 页码变化
+   */
+  const onShowSizeChange = (current, pageSize) => {
+    getList({
+      current,
+      pageSize,
+    });
+  };
+
+  return {
+    pageSizeOptions: [ '10', '30', '50' ],
+    showSizeChanger: true,
+    showQuickJumper: true,
+    showTotal: (total, range) => `共 ${total} 条`,
+    total,
+    current,
+    pageSize,
+    onChange: onPageChange,
+    onShowSizeChange: onShowSizeChange
+  };
 }
