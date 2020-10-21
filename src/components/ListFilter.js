@@ -30,7 +30,7 @@ class ListFilter extends React.Component {
   }
 
   render() {
-    const { form } = this.props;
+    const { form, classes } = this.props;
     const { getFieldDecorator } = form;
     return (
       <div>
@@ -57,6 +57,20 @@ class ListFilter extends React.Component {
               </Form.Item>
             </Col>
             <Col span={6}>
+              <Form.Item label="班级">
+                {getFieldDecorator('classes')(
+                  <Select>
+                    {
+                      classes.map(item => (
+                        <Select.Option value={item} key={item}>{item}</Select.Option>
+                      ))
+                    }
+                    
+                  </Select>,
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" onClick={this.handleSubmit}>
                 查询
               </Button>

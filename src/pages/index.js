@@ -6,7 +6,7 @@ import UserModal from '../components/UserModal';
 import BTable from '../components/BTable';
 import aHOC from '../hoc/aHOC';
 import bHOC from '../hoc/bHOC';
-import { getStudentList, addStudent, updateStudent } from '../services';
+import { getStudentList, addStudent, updateStudent, getClasses } from '../services';
 import { useAntdTable, useModal } from 'behooks';
 import styles from './index.less';
 
@@ -14,6 +14,7 @@ import styles from './index.less';
 
 const App = () => {
   const [userInfo, setUserInfo] = useState({});
+  const [classes, setClasses] = useState([]);
 
   const formRef = useRef(null);
 
@@ -79,12 +80,20 @@ const App = () => {
     { title: '姓名', dataIndex: 'name' },
     { title: '年龄', dataIndex: 'age' },
     { title: '性别', dataIndex: 'gender' },
+    { title: '班级', dataIndex: 'classes' },
     { title: '操作', key: 'action', render: (record) => <a onClick={() => openUserModal(record)}>编辑</a> },
   ];
 
+  useEffect(() => {
+    getClasses()
+      .then(res => {
+        setClasses(res);
+      });
+  }, []);
+
   return (
     <div className={styles.wrap}>
-      <ListFilter onSearch={submit} onReset={reset} ref={formRef} />
+      <ListFilter onSearch={submit} onReset={reset} ref={formRef} classes={classes} />
       <Button type="primary" onClick={() => openUserModal({})}>新增</Button>
       <Table columns={columns} rowKey="id" {...tableProps} />
       <UserModal
