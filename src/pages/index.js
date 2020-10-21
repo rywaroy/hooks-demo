@@ -9,13 +9,12 @@ import bHOC from '../hoc/bHOC';
 import { getStudentList, addStudent, updateStudent, getClasses } from '../services';
 import { useAntdTable, useModal } from 'behooks';
 import useClasses from './hooks/useClasses';
+import useEditStudent from './hooks/useEditStudent';
 import styles from './index.less';
 
 // const ATable = aHOC(BTable);
 
 const App = () => {
-  const [userInfo, setUserInfo] = useState({});
-  
 
   const formRef = useRef(null);
 
@@ -37,45 +36,13 @@ const App = () => {
 
   const { submit, reset } = search;
 
-  const { toggle, modalProps } = useModal();
-
-  /**
-   * 打开编辑学生弹窗
-   */
-  const openUserModal = record => {
-    setUserInfo(record);
-    toggle();
-  }
-
-  /**
-   * 关闭编辑学生弹窗
-   */
-  // const closeUserModal = () => {
-  //   setVisible(false);
-  // }
-
-  /**
-   * 编辑/新增
-   */
-  const edit = values => {
-    if (userInfo.id) { // 编辑
-      updateStudent({
-        id: userInfo.id,
-        ...values,
-      }).then(() => {
-        refresh();
-        toggle();
-        message.success('编辑成功');
-      });
-    } else { // 新增
-      addStudent(values)
-        .then(() => {
-          refresh();
-          toggle();
-          message.success('新增成功');
-        });
-    }
-  }
+  // 新增/编辑学生
+  const {
+    modalProps,
+    openUserModal,
+    edit,
+    userInfo,
+  } = useEditStudent(refresh);
 
   // 获取班级列表
   const classes = useClasses();
