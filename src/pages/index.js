@@ -8,13 +8,14 @@ import aHOC from '../hoc/aHOC';
 import bHOC from '../hoc/bHOC';
 import { getStudentList, addStudent, updateStudent, getClasses } from '../services';
 import { useAntdTable, useModal } from 'behooks';
+import useClasses from './hooks/useClasses';
 import styles from './index.less';
 
 // const ATable = aHOC(BTable);
 
 const App = () => {
   const [userInfo, setUserInfo] = useState({});
-  const [classes, setClasses] = useState([]);
+  
 
   const formRef = useRef(null);
 
@@ -76,6 +77,9 @@ const App = () => {
     }
   }
 
+  // 获取班级列表
+  const classes = useClasses();
+
   const columns = [
     { title: '姓名', dataIndex: 'name' },
     { title: '年龄', dataIndex: 'age' },
@@ -84,12 +88,7 @@ const App = () => {
     { title: '操作', key: 'action', render: (record) => <a onClick={() => openUserModal(record)}>编辑</a> },
   ];
 
-  useEffect(() => {
-    getClasses()
-      .then(res => {
-        setClasses(res);
-      });
-  }, []);
+  
 
   return (
     <div className={styles.wrap}>
