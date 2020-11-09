@@ -35,7 +35,16 @@ export function createStore(config) {
   stores[namespace] = state;
 }
 
-export function useStore(namespace) {
+export function useStore(config) {
+
+  let namespace
+
+  if (typeof config === 'object') {
+    namespace = config.namespace;
+    createStore(config);
+  } else {
+    namespace = config;
+  }
 
   if (!stores[namespace]) {
     return [];

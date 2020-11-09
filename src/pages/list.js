@@ -5,7 +5,19 @@ import { createStore, useStore } from '../store2'
 const ListPage = () => {
   console.log('parents')
 
-  createStore({
+  // createStore({
+  //   namespace: 'abc',
+  //   state: {
+  //     a: 1,
+  //     b: {
+  //       c: 2,
+  //     },
+  //     d: [{txt: 1}, {txt: 2}]
+  //   }
+  // });
+
+  // const { abc } = useStore();
+  const [abc, setabc] = useStore({
     namespace: 'abc',
     state: {
       a: 1,
@@ -15,9 +27,6 @@ const ListPage = () => {
       d: [{txt: 1}, {txt: 2}]
     }
   });
-
-  // const { abc } = useStore();
-  const [abc, setabc] = useStore('abc');
 
   // console.log('child');
 
